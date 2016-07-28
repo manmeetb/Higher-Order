@@ -16,7 +16,7 @@ CONST_DIMENSION = 8
 
 #This gives the order p of the solution approximation. If p =2,
 # then 3 solution points are needed in each coordinate direction
-CONST_P = 3
+CONST_P = 4
 
 #The dimensions of the rectangular grid that will be deformed by adding
 # the sinusoidal deformation
@@ -30,8 +30,8 @@ CONST_dx = (CONST_xMax-CONST_xMin)/(CONST_DIMENSION)
 CONST_dy = (CONST_yMax - CONST_yMin)/(CONST_DIMENSION)
 
 CONST_MESHFILENAME = "8x8_P1Riemann_4.msh"
-CONST_MESHFILENAMEPERIODIC = "8x8_P3SinePeriodic_4.msh"
-CONST_SOLUTIONPTFILENAME = "8x8_P3Sine_4SolPts.msh"
+CONST_MESHFILENAMEPERIODIC = "8x8_P4SinePeriodic_4.msh"
+CONST_SOLUTIONPTFILENAME = "8x8_P4Sine_4SolPts.msh"
 
 CONST_GaussQuadratureRootsAndCoefficients = {2: [[0.5773502692, -0.5773502692], [1.0, 1.0]],
     3: [[0.7745966692, 0.0000000000, -0.7745966692],
@@ -41,9 +41,11 @@ CONST_GaussQuadratureRootsAndCoefficients = {2: [[0.5773502692, -0.5773502692], 
 
 CONST_GaussLobattoRootsAndCoefficients = {
     2: [[-1,1],[0,0]],
-    3: [[-1, 0, 1], [0.3333333333333333333333, 1.333333333333333333333, 0.3333333333333333333333]],
+    3: [[-1., 0, 1.], [0.3333333333333333333333, 1.333333333333333333333, 0.3333333333333333333333]],
     4: [[-1, -0.4472135954999579392818, 0.4472135954999579392818, 1],
-        [0.1666666666666666666667, 0.833333333333333333333, 0.833333333333333333333, 0.1666666666666666666667]]}
+        [0.1666666666666666666667, 0.833333333333333333333, 0.833333333333333333333, 0.1666666666666666666667]],
+    5: [[-1., -0.654654, 0.0, 0.654654, 1.0],[0,0,0,0,0]]
+    }
 
 #This class holds the information for a grid point.
 class GridPoint(object):
