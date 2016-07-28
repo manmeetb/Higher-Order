@@ -1,0 +1,11 @@
+This program will create the deformed grid. It will 
+print the grid points and connectivity file as well as the
+boundary conditions in one file. Moreover, in the other file,
+we will print the solution points. The way this is printed is first
+with the vertices of the element (so first 4 rows are the corner nodes
+of the element) and then the next rows hold the solution points of the 
+element (so if p=2, the next 9 points are the solution points, in their
+correct order as they will be loaded into the higher order code)
+
+
+

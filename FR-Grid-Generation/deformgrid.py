@@ -1,5 +1,5 @@
 """
-This Python program will generate a sinuosidally perturbed
+This Python program will generate a perturbed
 grid with gauss lobatto legendre points. It will need as parameters
 the minimum and maximum x and y values (for 3D z is needed) and it 
 will need the number of grid points to use (for GLL nodes, the 
@@ -16,7 +16,7 @@ CONST_DIMENSION = 8
 
 #This gives the order p of the solution approximation. If p =2,
 # then 3 solution points are needed in each coordinate direction
-CONST_P = 2
+CONST_P = 3
 
 #The dimensions of the rectangular grid that will be deformed by adding
 # the sinusoidal deformation
@@ -29,17 +29,18 @@ CONST_yMax = 8.0
 CONST_dx = (CONST_xMax-CONST_xMin)/(CONST_DIMENSION)
 CONST_dy = (CONST_yMax - CONST_yMin)/(CONST_DIMENSION)
 
-CONST_MESHFILENAME = "LocalMesh.msh"
-CONST_MESHFILENAMEPERIODIC = "LocalMeshPeriodic.msh"
-CONST_SOLUTIONPTFILENAME = "SolPtsLocal"
+CONST_MESHFILENAME = "8x8_P1Riemann_4.msh"
+CONST_MESHFILENAMEPERIODIC = "8x8_P3SinePeriodic_4.msh"
+CONST_SOLUTIONPTFILENAME = "8x8_P3Sine_4SolPts.msh"
 
 CONST_GaussQuadratureRootsAndCoefficients = {2: [[0.5773502692, -0.5773502692], [1.0, 1.0]],
     3: [[0.7745966692, 0.0000000000, -0.7745966692],
         [0.5555555556, 0.8888888889, 0.5555555556]],
-        4: [[0.8611363116, 0.3399810436, -0.3399810436, -0.8611363116],
+    4: [[0.8611363116, 0.3399810436, -0.3399810436, -0.8611363116],
             [0.3478548451, 0.6521451549, 0.6521451549, 0.3478548451]]}
 
 CONST_GaussLobattoRootsAndCoefficients = {
+    2: [[-1,1],[0,0]],
     3: [[-1, 0, 1], [0.3333333333333333333333, 1.333333333333333333333, 0.3333333333333333333333]],
     4: [[-1, -0.4472135954999579392818, 0.4472135954999579392818, 1],
         [0.1666666666666666666667, 0.833333333333333333333, 0.833333333333333333333, 0.1666666666666666666667]]}
@@ -317,8 +318,8 @@ def perturbGrid(PhysicalElementMatrix):
                 x = gridObject.getX()
                 y = gridObject.getY()
                 
-                #x = x + sinPertrubFunction(y,CONST_dy)
-                #y = y + sinPertrubFunction(x,CONST_dx)
+                x = x + sinPertrubFunction(y,CONST_dy)
+                y = y + sinPertrubFunction(x,CONST_dx)
                 
                 gridObject.setX(x)
                 gridObject.setY(y)
@@ -347,7 +348,7 @@ def LoadPeriodicBCData(PhysicalElementMatrix, PhysicalElementList, PeriodicBound
        -----
          3
     """
-    print "Top Bot: "
+    #print "Top Bot: "
     #compute the periodic connections between the bottom and top faces of mesh
     # (i.e. side 1 and 3).
     for i in range(CONST_DIMENSION):
@@ -377,10 +378,10 @@ def LoadPeriodicBCData(PhysicalElementMatrix, PhysicalElementList, PeriodicBound
         dataTuple = (elementTopRowIndex, elementBotRowIndex, \
                      elementTopRowFaceIndex, elementBotRowFaceIndex)
         
-        print dataTuple
+        #print dataTuple
         PeriodicBoundaryConditionsList.append(dataTuple)
 
-    print "Left Right: "
+    #print "Left Right: "
     #compute the periodic connections between the left and right faces of the mesh
     # (i.e. side 2 and 4).
     for i in range(CONST_DIMENSION):
@@ -410,7 +411,7 @@ def LoadPeriodicBCData(PhysicalElementMatrix, PhysicalElementList, PeriodicBound
         dataTuple = (elementLeftColIndex, elementRightColIndex, \
                      elementLeftColFaceIndex, elementRightColFaceIndex)
 
-        print dataTuple
+    #print dataTuple
         PeriodicBoundaryConditionsList.append(dataTuple)
 
 
@@ -771,7 +772,7 @@ def main():
     ComputeConnectivity(PhysicalElementMatrix, MeshNodePointsList)
     #printMeshFileRIEMANN(PhysicalElementList, MeshNodePointsList, BoundaryConditionNodesList)
     printMeshFilePERIODIC(PhysicalElementList, MeshNodePointsList, PeriodicBoundaryConditionsList)
-    #printSolutionPoints(PhysicalElementMatrix)
+    printSolutionPoints(PhysicalElementMatrix)
     plotElements(PhysicalElementMatrix)
 
 
