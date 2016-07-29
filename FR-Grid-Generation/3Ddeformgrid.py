@@ -1,15 +1,16 @@
 
 
 """
-    
+    1
      z,k row
-      .. . . . .
+      .. . . . .3
     .         ..
-  . . . . . .  .
+ 2. . . . . .4  . 7
   .         .  . y, j row
-  .         . .
+  .  5      . .
   .         ..
-  . . . . . .
+6 . . . . . . 8
+ 
  i row
 x
 
@@ -29,7 +30,7 @@ import math
 #give the number of elements in each coordinate direction
 CONST_DIMENSION_X = 8
 CONST_DIMENSION_Y = 8
-CONST_DIMENSION_Z = 8
+CONST_DIMENSION_Z = 1
 
 #This gives the order p of the solution approximation. If p =2,
 # then 3 solution points are needed in each coordinate direction
@@ -41,8 +42,8 @@ CONST_xMin = -8.0
 CONST_xMax = 8.0
 CONST_yMin = -8.0
 CONST_yMax = 8.0
-CONST_zMin = -8.0
-CONST_zMax = 8.0
+CONST_zMin = -0.5
+CONST_zMax = 0.5
 
 CONST_dx = (CONST_xMax-CONST_xMin)/(CONST_DIMENSION_X)
 CONST_dy = (CONST_yMax - CONST_yMin)/(CONST_DIMENSION_Y)
@@ -99,11 +100,34 @@ class GridPoint(object):
 #This is the data structure for holding all the information about an element.
 #It will take as input a vertex which gives the vertices of the element. These vertices
 # will then scale the parent element GLL nodes to this physical element.
-class element(object):
-    def __init__(self, VerticesPointsMatrix):
-        # The size of the vertices points matrix is 2x2
-        self.VerticesPointsMatrix = VerticesPointsMatrix
+class Element(object):
+    def __init__(self, VerticesPointsMatrixTuples):
+        # The size of the vertices points matrix is 2x2x2
+        self.VerticesPointsMatrixTuples = VerticesPointsMatrixTuples
+
+        self.VerticesPointsMatrixNP = []
+        for l in range(2):
+            rowArray1 = []
+            for l1 in range(2):
+                rowArray2 = []
+                for l3 in range(2):
+                    rowArray2.append(None)
+                rowArray1.append(rowArray2)
+            self.VerticesPointsMatrixNP.append(rowArray1)
         
+        # create grid point objects for all the tuples in the vertices matrix
+        for i in range(2):
+            for j in range(2):
+                for k in range(2):
+                    x = self.VerticesPointsMatrixTuples[i][j][k][0]
+                    y = self.VerticesPointsMatrixTuples[i][j][k][1]
+                    z = self.VerticesPointsMatrixTuples[i][j][k][2]
+                    
+                    GP = GridPoint(x,y,z)
+                    self.VerticesPointsMatrixNP[i][j][k] = GP
+        
+    
+    
         #create a grid point matrix and list that will hold all the grid points
         # objects for the given element
         self.gridPointList= []
@@ -137,7 +161,7 @@ class element(object):
         # with the C FR code
         self.NodeArray = []
         
-        #self.setNodeArray()
+        self.setNodeArray()
             
 
     # the method for creating the grid points for the element based
@@ -164,13 +188,13 @@ class element(object):
     def mapParentToPhysicalRectangular(self,xi,eta,zeta):
         
         # The min and max xyz values for the element
-        xMinPhysical = self.VerticesPointsMatrix[0][0][0][0]
-        yMinPhysical = self.VerticesPointsMatrix[0][0][0][1]
-        zMinPhysical = self.VerticesPointsMatrix[0][0][0][2]
+        xMinPhysical = self.VerticesPointsMatrixTuples[0][0][0][0]
+        yMinPhysical = self.VerticesPointsMatrixTuples[0][0][0][1]
+        zMinPhysical = self.VerticesPointsMatrixTuples[0][0][0][2]
         
-        xMaxPhysical = self.VerticesPointsMatrix[1][1][1][0]
-        yMaxPhysical = self.VerticesPointsMatrix[1][1][1][1]
-        zMaxPhysical = self.VerticesPointsMatrix[1][1][1][2]
+        xMaxPhysical = self.VerticesPointsMatrixTuples[1][1][1][0]
+        yMaxPhysical = self.VerticesPointsMatrixTuples[1][1][1][1]
+        zMaxPhysical = self.VerticesPointsMatrixTuples[1][1][1][2]
         
         
         deltaxPhysical = xMaxPhysical - xMinPhysical
@@ -190,24 +214,24 @@ class element(object):
         return (x,y,z)
    
    
-    """
+   
     # The method that is in charge of placing the node points
-    # in the correct order. For now, the ordering will be to
-    # place the grid points from bottom right and ccw.
+    # in the correct order for the connectivity file.
     def setNodeArray(self):
+        
         elementObjectMatrix = self.gridPointMatrix
         
-        GPBotRight = elementObjectMatrix[CONST_P][CONST_P]
-        GPTopRight = elementObjectMatrix[0][CONST_P]
-        GPTopLeft = elementObjectMatrix[0][0]
-        GPBotLeft = elementObjectMatrix[CONST_P][0]
+        self.NodeArray.append(elementObjectMatrix[0][0][CONST_P]) #1
+        self.NodeArray.append(elementObjectMatrix[CONST_P][0][CONST_P]) #2
+        self.NodeArray.append(elementObjectMatrix[0][CONST_P][CONST_P]) #3
+        self.NodeArray.append(elementObjectMatrix[CONST_P][CONST_P][CONST_P]) #4
         
-        #load the objects into the NArray
-        self.NodeArray.append(GPBotRight)
-        self.NodeArray.append(GPTopRight)
-        self.NodeArray.append(GPTopLeft)
-        self.NodeArray.append(GPBotLeft)
-    """
+        
+        self.NodeArray.append(elementObjectMatrix[0][0][0]) #5
+        self.NodeArray.append(elementObjectMatrix[CONST_P][0][0]) #6
+        self.NodeArray.append(elementObjectMatrix[0][CONST_P][0]) #7
+        self.NodeArray.append(elementObjectMatrix[CONST_P][CONST_P][0]) #8
+    
     
     
     #the setters
@@ -266,6 +290,9 @@ class element(object):
     
     def getGridPointsMatrix(self):
         return self.gridPointMatrix
+    
+    def getVerticesMatrixNP(self):
+        return self.VerticesPointsMatrixNP
     
     # the x,y,z coordinates of what makes up the other boundary line
     def getOuterLineVectors(self):
@@ -416,16 +443,12 @@ class element(object):
         ListYVectors.append(yVector4)
         ListZVectors.append(zVector4)
 
-
         return (ListXVectors,ListYVectors, ListZVectors)
 
 
 
 
-
 #Methods
-
-
 
 #The sinusoidal perturbation function that is used to perturb to
 # deform the rectangular mesh. It has as parameters a  and da, which
@@ -453,9 +476,9 @@ def perturbGrid(PhysicalElementMatrix):
                     y = gridObject.getY()
                     z = gridObject.getZ()
                     
-                    x = x + sinPertrubFunction(y,z,CONST_dy,CONST_dz, CONST_dx)
-                    y = y + sinPertrubFunction(x,z,CONST_dx,CONST_dz,CONST_dy)
-                    z = z + sinPertrubFunction(x,y,CONST_dx,CONST_dy,CONST_dz)
+                    #x = x + sinPertrubFunction(y,z,CONST_dy,CONST_dz, CONST_dx)
+                    #y = y + sinPertrubFunction(x,z,CONST_dx,CONST_dz,CONST_dy)
+                    #z = z + sinPertrubFunction(x,y,CONST_dx,CONST_dy,CONST_dz)
                     
                     gridObject.setX(x)
                     gridObject.setY(y)
@@ -475,6 +498,7 @@ def plotElements(PhysicalElementMatrix):
     ax.set_ylabel('Y axis')
     ax.set_zlabel('Z axis')
     
+
     xVector = []
     yVector = []
     zVector = []
@@ -487,13 +511,11 @@ def plotElements(PhysicalElementMatrix):
                     yVector.append(gridPointObject.getY())
                     zVector.append(gridPointObject.getZ())
 
-    Axes3D.scatter(ax, xVector, yVector, zVector, s=30, c='r')
+    #Axes3D.scatter(ax, xVector, yVector, zVector, s=30, c='r')
 
     #Axes3D.plot_wireframe(ax, zSolid, xSolid, ySolid, rstride = 1, cstride = 1, color="b")
 
-    # Axes3D.set_ylim(ax, [-0.5,4.5])
-    # Axes3D.set_xlim(ax, [-0.5,4.5])
-    #Axes3D.set_zlim(ax, [-0.7, 0.7])
+
 
     # create the lines around all the elements
     for i in range(CONST_DIMENSION_X):
@@ -504,7 +526,210 @@ def plotElements(PhysicalElementMatrix):
                 for l in range(len(ListXVectors)):
                     plt.plot(ListXVectors[l],ListYVectors[l], ListZVectors[l], c = 'b')
 
+    Axes3D.set_ylim(ax, [-10,10])
+    Axes3D.set_xlim(ax, [-10,10])
+    Axes3D.set_zlim(ax, [-10, 10])
+    
+
     plt.show(block=True)
+
+
+#The method for loading all the mesh's node points in the correct order
+# into the list.
+def LoadMeshNodePoints(PhysicalElementMatrix, MeshNodePointsList):
+    
+    for i in range(CONST_DIMENSION_X):
+        for j in range(CONST_DIMENSION_Y):
+            for k in range(CONST_DIMENSION_Z):
+                # for this fixed column in the 3D mesh,
+                # add the nodes that are at the min x and y locations
+                # from the min z to max z value (i1=0, j1=0, k1 changes)
+
+                elementObject = PhysicalElementMatrix[i][j][k]
+                elementObjectMatrix = elementObject.getVerticesMatrixNP()
+                
+                for k1 in range(2):
+                    MeshNodePointsList.append(elementObjectMatrix[0][0][k1])
+                
+            if(j == CONST_DIMENSION_Y-1):
+                # looking down from the top, if we are at the top row in the
+                # y direction, then also add the other row of grid points
+
+                elementObject = PhysicalElementMatrix[i][j][k]
+                elementObjectMatrix = elementObject.getVerticesMatrixNP()
+                
+                for k1 in range(2):
+                    MeshNodePointsList.append(elementObjectMatrix[0][1][k1])
+
+        if(i == CONST_DIMENSION_X-1):
+            # if we are at the last row in the x direction, then we need to add the points
+            # on the opposite side of the element
+            
+            for j in range(CONST_DIMENSION_Y):
+                for k in range(CONST_DIMENSION_Z):
+                    elementObject = PhysicalElementMatrix[i][j][k]
+                    elementObjectMatrix = elementObject.getVerticesMatrixNP()
+                    
+                    for k1 in range(2):
+                        MeshNodePointsList.append(elementObjectMatrix[1][0][k1])
+
+                if(j==CONST_DIMENSION_Y-1):
+                    #at the top row in the y direction
+                    elementObject = PhysicalElementMatrix[i][j][k]
+                    elementObjectMatrix = elementObject.getVerticesMatrixNP()
+                
+                    for k1 in range(2):
+                        MeshNodePointsList.append(elementObjectMatrix[1][1][k1])
+
+
+# search for the index of the node in a list that holds grid point objects
+def getIndexNodePointInNodePointsList(NodePoint, NodePointsList):
+    for node in NodePointsList:
+        if ((node.getX() == NodePoint.getX()) and (node.getY()==NodePoint.getY()) and \
+            (node.getZ() == NodePoint.getZ())):
+            return NodePointsList.index(node)
+
+    return -1
+
+
+# This method is for adding the elements into a list in the exact order in which
+# they will be printed into the connectivity file. Print the elements in the same order
+# in which the node points are stored in their 1D list
+def LoadPhysicalElementList(PhysicalElementMatrix, PhysicalElementList):
+    
+    for i in range(CONST_DIMENSION_X):
+        for j in range(CONST_DIMENSION_Y):
+            for k in range(CONST_DIMENSION_Z):
+                PhysicalElementList.append(PhysicalElementMatrix[i][j][k])
+
+
+#Go through all the elements and use the already generated MeshNodePointsTuplesList
+# to create the connectivity string for each element
+def ComputeConnectivity(PhysicalElementMatrix, MeshNodePointsList):
+    
+    for i in range(CONST_DIMENSION_X):
+        for j in range(CONST_DIMENSION_Y):
+            for k in range(CONST_DIMENSION_Z):
+                elementObject = PhysicalElementMatrix[i][j][k]
+            
+                # get the points from the Node array
+                elementNodeArray = elementObject.getNodeArray()
+                
+                # Find the index of all the points and add 1 (the mesh file requires
+                # the extra addition by 1)
+                elementConnectivityString = ""
+                
+                for elementNode in elementNodeArray:
+                    index = getIndexNodePointInNodePointsList(elementNode, \
+                                                              MeshNodePointsList) + 1
+                    elementConnectivityString = elementConnectivityString + \
+                        str(index)+ " "
+                elementConnectivityString = elementConnectivityString + \
+                    str(elementObject.getPartitionNumber())+ " "+ str(0)
+                elementObject.setConnectivityString(elementConnectivityString)
+
+
+
+
+# go through all the elements on the boundary and those nodes that are on the
+# boundary are added to the list
+def LoadBCNodePointsRiemann(PhysicalElementMatrix, BoundaryConditionNodesList):
+    
+    # i=0 plane
+    for j in range(CONST_DIMENSION_Y):
+        for k in range(CONST_DIMENSION_Z):
+            
+            elementObject = PhysicalElementMatrix[0][j][k]
+            elementVerticesMatrix = elementObject.getVerticesMatrixNP()
+            # add all the node points that are on the i1=0 plane
+            # on the element to the BCNodesList if it hasn't been
+            # added yet
+            
+            for j1 in range(2):
+                for k1 in range(2):
+                    NP = elementVerticesMatrix[0][j1][k1]
+                    if (getIndexNodePointInNodePointsList(NP, BoundaryConditionNodesList) == -1):
+                        print "RIEMANN i0 plane: " + str(NP.getPoint())
+                        BoundaryConditionNodesList.append(NP)
+
+    # i=Max plane
+    for j in range(CONST_DIMENSION_Y):
+        for k in range(CONST_DIMENSION_Z):
+            elementObject = PhysicalElementMatrix[CONST_DIMENSION_X-1][j][k]
+            elementVerticesMatrix = elementObject.getVerticesMatrixNP()
+            # add all the node points that are on the i1=max plane for the element
+            
+            for j1 in range(2):
+                for k1 in range(2):
+                    NP = elementVerticesMatrix[1][j1][k1]
+                    if (getIndexNodePointInNodePointsList(NP, BoundaryConditionNodesList) == -1):
+                        print "RIEMANN imax plane: " + str(NP.getPoint())
+                        BoundaryConditionNodesList.append(NP)
+
+    # j=0 plane
+    for i in range(CONST_DIMENSION_X):
+        for k in range(CONST_DIMENSION_Z):
+            elementObject = PhysicalElementMatrix[i][0][k]
+            elementVerticesMatrix = elementObject.getVerticesMatrixNP()
+            # add all the node points that are on the j1=0 plane for the element
+            
+            for i1 in range(2):
+                for k1 in range(2):
+                    NP = elementVerticesMatrix[i1][0][k1]
+                    if (getIndexNodePointInNodePointsList(NP, BoundaryConditionNodesList) == -1):
+                        print "RIEMANN j0 plane: " + str(NP.getPoint())
+                        BoundaryConditionNodesList.append(NP)
+
+    # j=max plane
+    for i in range(CONST_DIMENSION_X):
+        for k in range(CONST_DIMENSION_Z):
+            elementObject = PhysicalElementMatrix[i][CONST_DIMENSION_Y-1][k]
+            elementVerticesMatrix = elementObject.getVerticesMatrixNP()
+            # add all the node points that are on the j1=max plane for the element
+            
+            for i1 in range(2):
+                for k1 in range(2):
+                    NP = elementVerticesMatrix[i1][1][k1]
+                    if (getIndexNodePointInNodePointsList(NP, BoundaryConditionNodesList) == -1):
+                        print "RIEMANN jmax plane: " + str(NP.getPoint())
+                        BoundaryConditionNodesList.append(NP)
+
+
+    # k=0 plane
+    for i in range(CONST_DIMENSION_X):
+        for j in range(CONST_DIMENSION_Y):
+            elementObject = PhysicalElementMatrix[i][j][0]
+            elementVerticesMatrix = elementObject.getVerticesMatrixNP()
+            # add all the node points that are on the k1=0 plane for the element
+            
+            for i1 in range(2):
+                for j1 in range(2):
+                    NP = elementVerticesMatrix[i1][j1][0]
+                    if (getIndexNodePointInNodePointsList(NP, BoundaryConditionNodesList) == -1):
+                        print "RIEMANN k0 plane: " + str(NP.getPoint())
+                        #BoundaryConditionNodesList.append(NP)
+
+    # k=max plane
+    for i in range(CONST_DIMENSION_X):
+        for j in range(CONST_DIMENSION_Y):
+            elementObject = PhysicalElementMatrix[i][j][CONST_DIMENSION_Z-1]
+            elementVerticesMatrix = elementObject.getVerticesMatrixNP()
+            # add all the node points that are on the k1=max plane for the element
+            
+            for i1 in range(2):
+                for j1 in range(2):
+                    NP = elementVerticesMatrix[i1][j1][1]
+                    if (getIndexNodePointInNodePointsList(NP, BoundaryConditionNodesList) == -1):
+                        print "RIEMANN kmax plane: " + str(NP.getPoint())
+                        #BoundaryConditionNodesList.append(NP)
+
+
+
+
+# the method that is used for loading the periodic data for the mesh into tuples.
+def LoadPeriodicBCData(PhysicalElementMatrix, PhysicalElementList, PeriodicBCList):
+    
+    1
 
 
 
@@ -574,11 +799,44 @@ def main():
                 
                 
                 #create the element object for this vertices matrix
-                elementObject = element(VerticesPointsMatrix)
+                elementObject = Element(VerticesPointsMatrix)
+                
+                #set the element's partition number
+                elementObject.setPartitionNumber(0)
+                
                 PhysicalElementMatrix[i][j][k] = elementObject
 
-    perturbGrid(PhysicalElementMatrix)
-    plotElements(PhysicalElementMatrix)
+
+    #create the list that will hold all the grid points
+    MeshNodePointsList = []
+    LoadMeshNodePoints(PhysicalElementMatrix, MeshNodePointsList)
+
+    # add the element objects into a list in the same way/order in which
+    # the node points are stored in the node points tuples list
+    PhysicalElementList = []
+    LoadPhysicalElementList(PhysicalElementMatrix, PhysicalElementList)
+    
+    for NP in MeshNodePointsList:
+        print NP.getPoint()
+
+    ComputeConnectivity(PhysicalElementMatrix, MeshNodePointsList)
+
+    #print the connectivity strings
+    for element in PhysicalElementList:
+        print element.getConnectivityString()
+
+
+    # The boundary conditions
+    #RiemannBCNodesList = []
+    #LoadBCNodePointsRiemann(PhysicalElementMatrix, RiemannBCNodesList)
+
+    PeriodicBCList = []
+    LoadPeriodicBCData(PhysicalElementMatrix, PhysicalElementList, PeriodicBCList)
+
+
+
+    #perturbGrid(PhysicalElementMatrix)
+    #plotElements(PhysicalElementMatrix)
 
 
 
