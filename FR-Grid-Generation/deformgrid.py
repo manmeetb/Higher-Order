@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import math
 
 #give the number of elements in each coordinate direction
-CONST_DIMENSION = 64
+CONST_DIMENSION = 20
 
 #This gives the order p of the solution approximation. If p =2,
 # then 3 solution points are needed in each coordinate direction
@@ -20,6 +20,8 @@ CONST_P = 1
 
 #The dimensions of the rectangular grid that will be deformed by adding
 # the sinusoidal deformation
+
+CONST_NumProcessors = 1
 
 CONST_xMin = -8.0
 CONST_xMax = 8.0
@@ -32,8 +34,19 @@ CONST_dy = (CONST_yMax - CONST_yMin)/(CONST_DIMENSION)
 CONST_Deform = False
 
 #CONST_MESHFILENAME = "8x8_P2Riemann_4.msh"
-CONST_MESHFILENAMEPERIODIC = "64x6_Rect_4.msh"
-CONST_SOLUTIONPTFILENAME = "64x64_P1Rect_4SolPts.msh"
+
+meshfileName = str(CONST_DIMENSION) + "x" + str(CONST_DIMENSION) + "_"
+meshSolPtsName = str(CONST_DIMENSION) + "x" + str(CONST_DIMENSION)+"_P"+str(CONST_P) 
+
+if(CONST_Deform == True):
+     meshfileName = meshfileName + "Sine_" + str(CONST_NumProcessors) + ".msh"
+     meshSolPtsName = meshSolPtsName + "Sine_" + str(CONST_NumProcessors)+ "SolPts.msh"
+else:
+     meshfileName = meshfileName + "Rect_" + str(CONST_NumProcessors) + ".msh"
+     meshSolPtsName = meshSolPtsName + "Rect_" + str(CONST_NumProcessors) + "SolPts.msh"
+
+CONST_MESHFILENAMEPERIODIC = meshfileName
+CONST_SOLUTIONPTFILENAME = meshSolPtsName
 
 CONST_GaussQuadratureRootsAndCoefficients = {2: [[0.5773502692, -0.5773502692], [1.0, 1.0]],
     3: [[0.7745966692, 0.0000000000, -0.7745966692],
@@ -730,31 +743,34 @@ def main():
             #create the element object using the newly created
             # vertices matrix
             elementObject = element(VerticesPointsMatrix)
-            
+                
             #depending on where the element object is on the grid, set its
             # MPI number for which processor will take care of it (this is split
             # among 4 processors so the MPI numbers range from 0 to 3)
             elementRow = CONST_DIMENSION -1 -i
             elementCol = j
-            
-            elementRowPlus1 = elementRow+1
-            elementColPlus1 = elementCol+1
+           
+            if(CONST_NumProcessors == 4): 
+           
+                elementRowPlus1 = elementRow+1
+                elementColPlus1 = elementCol+1
                 #now, use which location the element is in to set its partition
                 #number
-            elementObject.setPartitionNumber(-1)
-            if((elementRowPlus1<=CONST_DIMENSION/2) and
-               (elementColPlus1<=CONST_DIMENSION/2)):
+                elementObject.setPartitionNumber(-1)
+                if((elementRowPlus1<=CONST_DIMENSION/2) and
+                   (elementColPlus1<=CONST_DIMENSION/2)):
+                    elementObject.setPartitionNumber(0)
+                if((elementRowPlus1>CONST_DIMENSION/2) and
+                   (elementColPlus1<=CONST_DIMENSION/2)):
+                    elementObject.setPartitionNumber(1)
+                if((elementRowPlus1>CONST_DIMENSION/2) and
+                   (elementColPlus1>CONST_DIMENSION/2)):
+                    elementObject.setPartitionNumber(2)
+                if((elementRowPlus1<=CONST_DIMENSION/2) and
+                   (elementColPlus1>CONST_DIMENSION/2)):
+                    elementObject.setPartitionNumber(3)
+            else:
                 elementObject.setPartitionNumber(0)
-            if((elementRowPlus1>CONST_DIMENSION/2) and
-               (elementColPlus1<=CONST_DIMENSION/2)):
-                elementObject.setPartitionNumber(1)
-            if((elementRowPlus1>CONST_DIMENSION/2) and
-               (elementColPlus1>CONST_DIMENSION/2)):
-                elementObject.setPartitionNumber(2)
-            if((elementRowPlus1<=CONST_DIMENSION/2) and
-               (elementColPlus1>CONST_DIMENSION/2)):
-               elementObject.setPartitionNumber(3)
-            
             #arrange the elements into the PhysicalElementMatrix like so
             # elementTopCorner elementTopRightCorner
             # elementBottomCorner elementBottomRightCorner
