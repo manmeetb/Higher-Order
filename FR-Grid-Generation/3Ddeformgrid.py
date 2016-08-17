@@ -34,12 +34,12 @@ CONST_DIMENSION_Z = 8
 
 #This gives the order p of the solution approximation. If p =2,
 # then 3 solution points are needed in each coordinate direction
-CONST_P = 2
+CONST_P = 4
 
 
 #The output files
-CONST_MeshFilenamePeriodic = "8x8x8_P2SinePeriodic_4.msh"
-CONST_SolPtsFile = "8x8x8_P2SinePeriodic_4_solpts.msh"
+CONST_MeshFilenamePeriodic = "8x8x8_P4SinePeriodic_4.msh"
+CONST_SolPtsFile = "8x8x8_P4SinePeriodic_4_solpts.msh"
 
 #The box dimensions
 CONST_xMin = -8.0
@@ -64,7 +64,8 @@ CONST_GaussLobattoRootsAndCoefficients = {
     2: [[-1,1],[0,0]],
     3: [[-1, 0, 1], [0.3333333333333333333333, 1.333333333333333333333, 0.3333333333333333333333]],
     4: [[-1, -0.4472135954999579392818, 0.4472135954999579392818, 1],
-        [0.1666666666666666666667, 0.833333333333333333333, 0.833333333333333333333, 0.1666666666666666666667]]}
+        [0.1666666666666666666667, 0.833333333333333333333, 0.833333333333333333333, 0.1666666666666666666667]],
+    5: [[-1., -0.654654, 0.0, 0.654654, 1.0],[0,0,0,0,0]]}
 
 
 
@@ -547,7 +548,7 @@ def perturbGrid(PhysicalElementMatrix):
 
 
 
-#Takes as input the physical element matrix and plotx all the
+#Takes as input the physical element matrix and plots all the
 # elements
 def plotElements(PhysicalElementMatrix):
     fig = plt.figure()
@@ -571,7 +572,7 @@ def plotElements(PhysicalElementMatrix):
                     yVector.append(gridPointObject.getY())
                     zVector.append(gridPointObject.getZ())
 
-    #Axes3D.scatter(ax, xVector, yVector, zVector, s=30, c='r')
+    Axes3D.scatter(ax, xVector, yVector, zVector, s=30, c='r')
 
     #Axes3D.plot_wireframe(ax, zSolid, xSolid, ySolid, rstride = 1, cstride = 1, color="b")
 

@@ -1,0 +1,697 @@
+Data for tests
+
+Rectangular Mesh Periodic (500 iterations, dt = 2E-3):
+
+P = 1, N = 1:
+5.400120e-02	8.163387e-01	64 
+6.253858e-02	1.056378e+00	64 
+5.052874e-02	8.478034e-01	64 
+2.063655e-02	5.607471e-01	64 
+
+Preprocesor  0.10000 seconds
+Flow Solver  0.14000 seconds
+  MPI        0.02000 seconds
+  Solving    0.12000 seconds
+Total Time   0.24000 seconds
+
+Preprocesor  0.06000 seconds
+Flow Solver  0.14000 seconds
+  MPI        0.01000 seconds
+  Solving    0.13000 seconds
+Total Time   0.20000 seconds
+
+Preprocesor  0.06000 seconds
+Flow Solver  0.14000 seconds
+  MPI        0.01000 seconds
+  Solving    0.13000 seconds
+Total Time   0.20000 seconds
+
+Preprocesor  0.06000 seconds
+Flow Solver  0.13000 seconds
+  MPI        0.01000 seconds
+  Solving    0.12000 seconds
+Total Time   0.19000 seconds
+
+
+
+P = 2, N = 2:
+6.914161e-03	3.010381e-01	144 
+5.779929e-03	4.052018e-01	144 
+1.300462e-02	4.480622e-01	144 
+1.515613e-02	6.219465e-01	144 
+
+Preprocesor  0.07000 seconds
+Flow Solver  0.23000 seconds
+  MPI        0.02000 seconds
+  Solving    0.21000 seconds
+Total Time   0.30000 seconds
+
+Preprocesor  0.05000 seconds
+Flow Solver  0.24000 seconds
+  MPI        0.01000 seconds
+  Solving    0.23000 seconds
+Total Time   0.29000 seconds
+
+Preprocesor  0.06000 seconds
+Flow Solver  0.23000 seconds
+  MPI        0.01000 seconds
+  Solving    0.22000 seconds
+Total Time   0.29000 seconds
+
+Preprocesor  0.05000 seconds
+Flow Solver  0.24000 seconds
+  MPI        0.04000 seconds
+  Solving    0.20000 seconds
+Total Time   0.29000 seconds
+
+
+
+P = 3, N = 3:
+1.515128e-03	2.612557e-01	256 
+2.183426e-03	2.133974e-01	256 
+8.362355e-04	1.634529e-01	256 
+3.331322e-03	3.167452e-01	256 
+
+Preprocesor  0.06000 seconds
+Flow Solver  0.39000 seconds
+  MPI        0.05000 seconds
+  Solving    0.34000 seconds
+Total Time   0.45000 seconds
+
+Preprocesor  0.05000 seconds
+Flow Solver  0.41000 seconds
+  MPI        0.03000 seconds
+  Solving    0.38000 seconds
+Total Time   0.46000 seconds
+
+Preprocesor  0.06000 seconds
+Flow Solver  0.39000 seconds
+  MPI        0.04000 seconds
+  Solving    0.35000 seconds
+Total Time   0.45000 seconds
+
+Preprocesor  0.10000 seconds
+Flow Solver  0.40000 seconds
+  MPI        0.02000 seconds
+  Solving    0.38000 seconds
+Total Time   0.50000 seconds
+
+
+P = 4, N = 4:
+2.640524e-04	9.304340e-02	400 
+2.244380e-04	1.023435e-01	400 
+6.020415e-04	1.483059e-01	400 
+6.960056e-04	1.568688e-01	400 
+
+Preprocesor  0.12000 seconds
+Flow Solver  0.59000 seconds
+  MPI        0.03000 seconds
+  Solving    0.56000 seconds
+Total Time   0.71000 seconds
+
+Preprocesor  0.07000 seconds
+Flow Solver  0.60000 seconds
+  MPI        0.08000 seconds
+  Solving    0.52000 seconds
+Total Time   0.67000 seconds
+
+Preprocesor  0.08000 seconds
+Flow Solver  0.58000 seconds
+  MPI        0.05000 seconds
+  Solving    0.53000 seconds
+Total Time   0.66000 seconds
+
+Preprocesor  0.07000 seconds
+Flow Solver  0.60000 seconds
+  MPI        0.02000 seconds
+  Solving    0.58000 seconds
+Total Time   0.67000 seconds
+
+
+	Super/Sub Results - Rectangular Mesh
+P=1
+5.400120e-02	8.163387e-01	64 
+6.253858e-02	1.056378e+00	64 
+5.052874e-02	8.478034e-01	64 
+2.063655e-02	5.607471e-01	64 
+
+Preprocesor  0.06000 seconds
+Flow Solver  0.25000 seconds
+  MPI        0.04000 seconds
+  Solving    0.21000 seconds
+Total Time   0.31000 seconds
+
+Preprocesor  0.06000 seconds
+Flow Solver  0.24000 seconds
+  MPI        0.06000 seconds
+  Solving    0.18000 seconds
+Total Time   0.30000 seconds
+
+Preprocesor  0.07000 seconds
+Flow Solver  0.18000 seconds
+  MPI        0.03000 seconds
+  Solving    0.15000 seconds
+Total Time   0.25000 seconds
+
+Preprocesor  0.10000 seconds
+Flow Solver  0.27000 seconds
+  MPI        0.09000 seconds
+  Solving    0.18000 seconds
+Total Time   0.37000 seconds
+
+
+P=3
+8.362355e-04	1.634529e-01	256 
+1.515128e-03	2.612557e-01	256 
+2.183426e-03	2.133974e-01	256 
+3.331322e-03	3.167452e-01	256 
+
+Preprocesor  0.06000 seconds
+Flow Solver  0.65000 seconds
+  MPI        0.09000 seconds
+  Solving    0.56000 seconds
+Total Time   0.71000 seconds
+
+Preprocesor  0.05000 seconds
+Flow Solver  0.68000 seconds
+  MPI        0.12000 seconds
+  Solving    0.56000 seconds
+Total Time   0.73000 seconds
+
+Preprocesor  0.11000 seconds
+Flow Solver  0.43000 seconds
+  MPI        0.02000 seconds
+  Solving    0.41000 seconds
+Total Time   0.54000 seconds
+
+Preprocesor  0.06000 seconds
+Flow Solver  0.63000 seconds
+  MPI        0.12000 seconds
+  Solving    0.51000 seconds
+Total Time   0.69000 seconds
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sine Mesh Periodic (500 iterations, dt = 2E-3):
+
+P = 1, N = 1
+7.808069e-02	1.154272e+00	64 
+6.988535e-02	9.948492e-01	64 
+7.779284e-02	9.031164e-01	64 
+2.586951e-02	5.042697e-01	64 
+
+Preprocesor  0.05000 seconds
+Flow Solver  0.16000 seconds
+  MPI        0.01000 seconds
+  Solving    0.15000 seconds
+Total Time   0.21000 seconds
+
+Preprocesor  0.10000 seconds
+Flow Solver  0.16000 seconds
+  MPI        0.00000 seconds
+  Solving    0.16000 seconds
+Total Time   0.26000 seconds
+
+Preprocesor  0.10000 seconds
+Flow Solver  0.16000 seconds
+  MPI        0.01000 seconds
+  Solving    0.15000 seconds
+Total Time   0.26000 seconds
+
+Preprocesor  0.09000 seconds
+Flow Solver  0.16000 seconds
+  MPI        0.02000 seconds
+  Solving    0.14000 seconds
+Total Time   0.25000 seconds
+
+
+P = 2, N = 2
+4.672274e-02	8.628499e-01	144 
+3.012175e-02	7.929670e-01	144 
+1.206931e-02	3.648060e-01	144 
+8.204918e-02	1.055669e+00	144 
+
+Preprocesor  0.19000 seconds
+Flow Solver  0.32000 seconds
+  MPI        0.03000 seconds
+  Solving    0.29000 seconds
+Total Time   0.51000 seconds
+
+Preprocesor  0.15000 seconds
+Flow Solver  0.32000 seconds
+  MPI        0.01000 seconds
+  Solving    0.31000 seconds
+Total Time   0.47000 seconds
+
+Preprocesor  0.13000 seconds
+Flow Solver  0.29000 seconds
+  MPI        0.02000 seconds
+  Solving    0.27000 seconds
+Total Time   0.42000 seconds
+
+Preprocesor  0.11000 seconds
+Flow Solver  0.31000 seconds
+  MPI        0.05000 seconds
+  Solving    0.26000 seconds
+Total Time   0.42000 seconds
+
+
+P=3, N=3
+1.173082e-02	4.469716e-01	256 
+1.233198e-03	1.799525e-01	256 
+3.975096e-03	3.655162e-01	256 
+1.270772e-02	4.856304e-01	256 
+
+Preprocesor  0.07000 seconds
+Flow Solver  0.47000 seconds
+  MPI        0.03000 seconds
+  Solving    0.44000 seconds
+Total Time   0.54000 seconds
+
+Preprocesor  0.07000 seconds
+Flow Solver  0.48000 seconds
+  MPI        0.04000 seconds
+  Solving    0.44000 seconds
+Total Time   0.55000 seconds
+
+Preprocesor  0.06000 seconds
+Flow Solver  0.46000 seconds
+  MPI        0.07000 seconds
+  Solving    0.39000 seconds
+Total Time   0.52000 seconds
+
+Preprocesor  0.10000 seconds
+Flow Solver  0.48000 seconds
+  MPI        0.04000 seconds
+  Solving    0.44000 seconds
+Total Time   0.58000 seconds
+
+
+P=4,N=4
+4.725269e-04	1.160102e-01	400 
+2.390877e-03	2.658132e-01	400 
+2.830021e-03	3.152529e-01	400 
+2.732444e-03	2.852550e-01	400 
+
+Preprocesor  0.13000 seconds
+Flow Solver  0.63000 seconds
+  MPI        0.05000 seconds
+  Solving    0.58000 seconds
+Total Time   0.76000 seconds
+
+Preprocesor  0.10000 seconds
+Flow Solver  0.64000 seconds
+  MPI        0.06000 seconds
+  Solving    0.58000 seconds
+Total Time   0.74000 seconds
+
+Preprocesor  0.09000 seconds
+Flow Solver  0.64000 seconds
+  MPI        0.06000 seconds
+  Solving    0.58000 seconds
+Total Time   0.73000 seconds
+
+Preprocesor  0.14000 seconds
+Flow Solver  0.65000 seconds
+  MPI        0.04000 seconds
+  Solving    0.61000 seconds
+Total Time   0.79000 seconds
+
+	Super/Sub Parametric Results (N=2)
+P = 1
+8.005218e-02	9.265941e-01	64 
+8.432124e-02	1.167545e+00	64 
+7.485707e-02	9.842431e-01	64 
+3.111936e-02	5.185891e-01	64 
+
+Preprocesor  0.05000 seconds
+Flow Solver  0.28000 seconds
+  MPI        0.05000 seconds
+  Solving    0.23000 seconds
+Total Time   0.33000 seconds
+
+Preprocesor  0.09000 seconds
+Flow Solver  0.18000 seconds
+  MPI        0.01000 seconds
+  Solving    0.17000 seconds
+Total Time   0.27000 seconds
+
+Preprocesor  0.10000 seconds
+Flow Solver  0.27000 seconds
+  MPI        0.03000 seconds
+  Solving    0.24000 seconds
+Total Time   0.37000 seconds
+
+Preprocesor  0.05000 seconds
+Flow Solver  0.27000 seconds
+  MPI        0.05000 seconds
+  Solving    0.22000 seconds
+Total Time   0.32000 seconds
+
+P = 3
+1.270766e-03	1.745751e-01	256 
+4.140730e-03	3.733803e-01	256 
+1.208810e-02	4.607778e-01	256 
+1.299356e-02	4.891770e-01	256 
+
+Preprocesor  0.07000 seconds
+Flow Solver  0.60000 seconds
+  MPI        0.07000 seconds
+  Solving    0.53000 seconds
+Total Time   0.67000 seconds
+
+Preprocesor  0.11000 seconds
+Flow Solver  0.45000 seconds
+  MPI        0.03000 seconds
+  Solving    0.42000 seconds
+Total Time   0.56000 seconds
+
+Preprocesor  0.07000 seconds
+Flow Solver  0.59000 seconds
+  MPI        0.05000 seconds
+  Solving    0.54000 seconds
+Total Time   0.66000 seconds
+
+Preprocesor  0.07000 seconds
+Flow Solver  0.59000 seconds
+  MPI        0.09000 seconds
+  Solving    0.50000 seconds
+Total Time   0.66000 seconds
+
+P = 4
+5.530634e-04	1.181006e-01	400 
+2.428601e-03	2.689440e-01	400 
+2.937824e-03	3.103174e-01	400 
+2.889396e-03	2.871601e-01	400 
+
+Preprocesor  0.12000 seconds
+Flow Solver  0.82000 seconds
+  MPI        0.10000 seconds
+  Solving    0.72000 seconds
+Total Time   0.94000 seconds
+
+Preprocesor  0.07000 seconds
+Flow Solver  0.64000 seconds
+  MPI        0.09000 seconds
+  Solving    0.55000 seconds
+Total Time   0.71000 seconds
+
+Preprocesor  0.08000 seconds
+Flow Solver  0.83000 seconds
+  MPI        0.12000 seconds
+  Solving    0.71000 seconds
+Total Time   0.91000 seconds
+
+Preprocesor  0.07000 seconds
+Flow Solver  0.85000 seconds
+  MPI        0.12000 seconds
+  Solving    0.73000 seconds
+Total Time   0.92000 seconds
+
+
+
+
+Rectangular Mesh Periodic (500 iterations, dt = 2E-3):
+
+Isoparametric
+
+P = 1
+2.579579e-01	1.084464e+00	64 
+2.662477e-01	1.299098e+00	64 
+2.767986e-01	1.517067e+00	64 
+2.678475e-01	1.312189e+00	64 
+
+Preprocesor  0.09000 seconds
+Flow Solver  3.39000 seconds
+  MPI        0.37000 seconds
+  Solving    3.02000 seconds
+Total Time   3.48000 seconds
+
+Preprocesor  0.05000 seconds
+Flow Solver  3.62000 seconds
+  MPI        0.52000 seconds
+  Solving    3.10000 seconds
+Total Time   3.67000 seconds
+
+Preprocesor  0.09000 seconds
+Flow Solver  3.48000 seconds
+  MPI        0.45000 seconds
+  Solving    3.03000 seconds
+Total Time   3.57000 seconds
+
+Preprocesor  0.05000 seconds
+Flow Solver  2.66000 seconds
+  MPI        0.23000 seconds
+  Solving    2.43000 seconds
+Total Time   2.71000 seconds
+
+P = 2
+2.170516e-02	1.088345e+00	144 
+2.323764e-02	1.190610e+00	144 
+2.328651e-02	1.138409e+00	144 
+2.828827e-02	1.142232e+00	144 
+
+Preprocesor  0.06000 seconds
+Flow Solver  6.15000 seconds
+  MPI        0.68000 seconds
+  Solving    5.47000 seconds
+Total Time   6.21000 seconds
+
+Preprocesor  0.06000 seconds
+Flow Solver  5.68000 seconds
+  MPI        0.79000 seconds
+  Solving    4.89000 seconds
+Total Time   5.74000 seconds
+
+Preprocesor  0.06000 seconds
+Flow Solver  5.86000 seconds
+  MPI        0.67000 seconds
+  Solving    5.19000 seconds
+Total Time   5.92000 seconds
+
+Preprocesor  0.11000 seconds
+Flow Solver  4.56000 seconds
+  MPI        0.39000 seconds
+  Solving    4.17000 seconds
+Total Time   4.67000 seconds
+
+P = 3
+
+1.327705e-02	1.048180e+00	256 
+1.410225e-02	1.088235e+00	256 
+8.005810e-03	8.985251e-01	256 
+9.597064e-03	9.673922e-01	256 
+
+Preprocesor  0.11000 seconds
+Flow Solver  9.52000 seconds
+  MPI        1.18000 seconds
+  Solving    8.34000 seconds
+Total Time   9.63000 seconds
+
+Preprocesor  0.05000 seconds
+Flow Solver  9.90000 seconds
+  MPI        1.17000 seconds
+  Solving    8.73000 seconds
+Total Time   9.95000 seconds
+
+Preprocesor  0.06000 seconds
+Flow Solver  7.59000 seconds
+  MPI        0.65000 seconds
+  Solving    6.94000 seconds
+Total Time   7.65000 seconds
+
+Preprocesor  0.06000 seconds
+Flow Solver 10.15000 seconds
+  MPI        1.23000 seconds
+  Solving    8.92000 seconds
+Total Time  10.21000 seconds
+
+P = 4
+
+7.556037e-03	6.092036e-01	400 
+7.557357e-03	7.979086e-01	400 
+8.523865e-03	7.676555e-01	400 
+7.397349e-03	7.271846e-01	400 
+
+Preprocesor  0.07000 seconds
+Flow Solver 14.65000 seconds
+  MPI        1.97000 seconds
+  Solving   12.68000 seconds
+Total Time  14.72000 seconds
+
+Preprocesor  0.06000 seconds
+Flow Solver 14.70000 seconds
+  MPI        1.77000 seconds
+  Solving   12.93000 seconds
+Total Time  14.76000 seconds
+
+Preprocesor  0.07000 seconds
+Flow Solver 15.01000 seconds
+  MPI        1.84000 seconds
+  Solving   13.17000 seconds
+Total Time  15.08000 seconds
+
+Preprocesor  0.07000 seconds
+Flow Solver 10.51000 seconds
+  MPI        1.13000 seconds
+  Solving    9.38000 seconds
+Total Time  10.58000 seconds
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sine Mesh Periodic (8000 iterations, dt = 2E-3):
+	(u direction convection)
+Isoparametric
+P = 1
+2.564506e-01	1.136704e+00	64 
+2.684190e-01	1.377275e+00	64 
+2.683230e-01	1.366248e+00	64 
+2.547627e-01	1.138394e+00	64 
+
+Preprocesor  0.04000 seconds
+Flow Solver  2.49000 seconds
+  MPI        0.14000 seconds
+  Solving    2.35000 seconds
+Total Time   2.53000 seconds
+
+Preprocesor  0.04000 seconds
+Flow Solver  2.50000 seconds
+  MPI        0.22000 seconds
+  Solving    2.28000 seconds
+Total Time   2.54000 seconds
+
+Preprocesor  0.04000 seconds
+Flow Solver  2.38000 seconds
+  MPI        0.13000 seconds
+  Solving    2.25000 seconds
+Total Time   2.42000 seconds
+
+Preprocesor  0.05000 seconds
+Flow Solver  2.48000 seconds
+  MPI        0.14000 seconds
+  Solving    2.34000 seconds
+Total Time   2.53000 seconds
+
+P = 2
+5.109536e-02	1.347798e+00	144 
+4.793540e-02	1.262924e+00	144 
+4.584500e-02	1.054193e+00	144 
+4.570138e-02	1.147397e+00	144 
+
+Preprocesor  0.05000 seconds
+Flow Solver  3.89000 seconds
+  MPI        0.30000 seconds
+  Solving    3.59000 seconds
+Total Time   3.94000 seconds
+
+Preprocesor  0.05000 seconds
+Flow Solver  3.89000 seconds
+  MPI        0.31000 seconds
+  Solving    3.58000 seconds
+Total Time   3.94000 seconds
+
+Preprocesor  0.05000 seconds
+Flow Solver  3.88000 seconds
+  MPI        0.26000 seconds
+  Solving    3.62000 seconds
+Total Time   3.93000 seconds
+
+Preprocesor  0.05000 seconds
+Flow Solver  3.84000 seconds
+  MPI        0.21000 seconds
+  Solving    3.63000 seconds
+Total Time   3.89000 seconds
+
+
+P = 3
+1.647247e-02	9.698735e-01	256 
+2.046960e-02	1.211482e+00	256 
+7.813240e-03	9.301172e-01	256 
+1.473098e-02	1.045943e+00	256 
+
+Preprocesor  0.05000 seconds
+Flow Solver  6.27000 seconds
+  MPI        0.60000 seconds
+  Solving    5.67000 seconds
+Total Time   6.32000 seconds
+
+Preprocesor  0.05000 seconds
+Flow Solver  6.08000 seconds
+  MPI        0.42000 seconds
+  Solving    5.66000 seconds
+Total Time   6.13000 seconds
+
+Preprocesor  0.06000 seconds
+Flow Solver  6.24000 seconds
+  MPI        0.52000 seconds
+  Solving    5.72000 seconds
+Total Time   6.30000 seconds
+
+Preprocesor  0.05000 seconds
+Flow Solver  6.28000 seconds
+  MPI        0.57000 seconds
+  Solving    5.71000 seconds
+Total Time   6.33000 seconds
+
+P = 4
+
+2.192925e-02	1.443079e+00	400 
+2.270129e-02	1.139920e+00	400 
+2.906589e-02	1.450224e+00	400 
+2.034681e-02	1.201397e+00	400 
+
+Preprocesor  0.06000 seconds
+Flow Solver  8.32000 seconds
+  MPI        0.74000 seconds
+  Solving    7.58000 seconds
+Total Time   8.38000 seconds
+
+Preprocesor  0.05000 seconds
+Flow Solver  8.32000 seconds
+  MPI        0.65000 seconds
+  Solving    7.67000 seconds
+Total Time   8.37000 seconds
+
+Preprocesor  0.05000 seconds
+Flow Solver  8.32000 seconds
+  MPI        0.49000 seconds
+  Solving    7.83000 seconds
+Total Time   8.37000 seconds
+
+Preprocesor  0.06000 seconds
+Flow Solver  8.27000 seconds
+  MPI        0.68000 seconds
+  Solving    7.59000 seconds
+Total Time   8.33000 seconds
+
+
+
+
+
+
+
+
+

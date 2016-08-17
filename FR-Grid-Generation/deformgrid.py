@@ -12,11 +12,11 @@ import matplotlib.pyplot as plt
 import math
 
 #give the number of elements in each coordinate direction
-CONST_DIMENSION = 8
+CONST_DIMENSION = 64
 
 #This gives the order p of the solution approximation. If p =2,
 # then 3 solution points are needed in each coordinate direction
-CONST_P = 4
+CONST_P = 1
 
 #The dimensions of the rectangular grid that will be deformed by adding
 # the sinusoidal deformation
@@ -29,9 +29,11 @@ CONST_yMax = 8.0
 CONST_dx = (CONST_xMax-CONST_xMin)/(CONST_DIMENSION)
 CONST_dy = (CONST_yMax - CONST_yMin)/(CONST_DIMENSION)
 
-CONST_MESHFILENAME = "8x8_P1Riemann_4.msh"
-CONST_MESHFILENAMEPERIODIC = "8x8_P4SinePeriodic_4.msh"
-CONST_SOLUTIONPTFILENAME = "8x8_P4Sine_4SolPts.msh"
+CONST_Deform = False
+
+#CONST_MESHFILENAME = "8x8_P2Riemann_4.msh"
+CONST_MESHFILENAMEPERIODIC = "64x6_Rect_4.msh"
+CONST_SOLUTIONPTFILENAME = "64x64_P1Rect_4SolPts.msh"
 
 CONST_GaussQuadratureRootsAndCoefficients = {2: [[0.5773502692, -0.5773502692], [1.0, 1.0]],
     3: [[0.7745966692, 0.0000000000, -0.7745966692],
@@ -59,6 +61,9 @@ class GridPoint(object):
         return self.x
     def getY(self):
         return self.y
+    def getID(self):
+        return self.id
+    
 
     #The setters
     def setX(self,x):
@@ -117,6 +122,7 @@ class element(object):
                 GridPointObject = GridPoint(x,y)
                 self.gridPointList.append(GridPointObject)
                 self.gridPointMatrix[CONST_P-j][i] = GridPointObject
+
                 """
                 print "     i: " + str(CONST_P-j)
                 print "     j: " + str(i)
@@ -302,8 +308,8 @@ def plotElements(PhysicalElementMatrix):
 # this are the parameters n, A and Lo
 
 CONST_n = 2.
-CONST_A = 0.2
-CONST_Lo = 10.
+CONST_A = 0.5
+CONST_Lo = 8.
 def sinPertrubFunction(a, da):
     return CONST_A*da*math.sin((CONST_n/CONST_Lo)*3.1415926*a)
 
@@ -320,8 +326,9 @@ def perturbGrid(PhysicalElementMatrix):
                 x = gridObject.getX()
                 y = gridObject.getY()
                 
-                x = x + sinPertrubFunction(y,CONST_dy)
-                y = y + sinPertrubFunction(x,CONST_dx)
+                if (CONST_Deform):
+                    x = x + sinPertrubFunction(y,CONST_dy)
+                    y = y + sinPertrubFunction(x,CONST_dx)
                 
                 gridObject.setX(x)
                 gridObject.setY(y)
@@ -476,7 +483,7 @@ def LoadBCNodePointsRiemann(PhysicalElementMatrix, BoundaryConditionNodesList):
 # right order. That is, place the nodes into the file
 # with the node points being printed from bottom to up and
 # from left to right go through all the elements and put into
-#the node list their bottom left node (for
+# the node list their bottom left node (for
 # the top most element of a column put in the
 # top left node also)
 
@@ -574,9 +581,19 @@ def printMeshFileRIEMANN(PhysicalElementList, MeshNodePointsList, BoundaryCondit
 
 def getIndexNode(NodePoint, NodePointList):
     
+    Tolerance = 0.0000001
     for node in NodePointList:
+        
+        
         if ((node.getX() == NodePoint.getX()) and (node.getY()==NodePoint.getY())):
             return NodePointList.index(node)
+        
+        
+        if((abs(NodePoint.getX() - node.getX())<= Tolerance) and \
+            (abs(NodePoint.getY() - node.getY()) <= Tolerance)):
+            if (((node.getX() == NodePoint.getX()) and \
+                 (node.getY()==NodePoint.getY())) == False):
+                return NodePointList.index(node)
 
     return -1
 
@@ -644,6 +661,10 @@ def ComputeConnectivity(PhysicalElementMatrix, MeshNodePointsList):
             
             for elementNode in elementNodeArray:
                 index = getIndexNode(elementNode, MeshNodePointsList) + 1
+                if(index == 0):
+                    print "         index error: " + str(elementNode.getX()) + \
+                        " y: " + str \
+                        (elementNode.getY())
                 elementConnectivityString = elementConnectivityString + \
                     str(index)+ " "
             elementConnectivityString = elementConnectivityString + \
@@ -720,7 +741,7 @@ def main():
             elementColPlus1 = elementCol+1
                 #now, use which location the element is in to set its partition
                 #number
-                
+            elementObject.setPartitionNumber(-1)
             if((elementRowPlus1<=CONST_DIMENSION/2) and
                (elementColPlus1<=CONST_DIMENSION/2)):
                 elementObject.setPartitionNumber(0)
@@ -737,7 +758,6 @@ def main():
             #arrange the elements into the PhysicalElementMatrix like so
             # elementTopCorner elementTopRightCorner
             # elementBottomCorner elementBottomRightCorner
-            
             PhysicalElementMatrix[elementRow][elementCol] = elementObject
 
     perturbGrid(PhysicalElementMatrix)
@@ -760,8 +780,8 @@ def main():
     LoadMeshNodePoints(PhysicalElementMatrix, MeshNodePointsList)
     
         # for the Riemann boundary conditions
-    BoundaryConditionNodesList = []
-    LoadBCNodePointsRiemann(PhysicalElementMatrix, BoundaryConditionNodesList)
+    #BoundaryConditionNodesList = []
+    #LoadBCNodePointsRiemann(PhysicalElementMatrix, BoundaryConditionNodesList)
     
     
         #for the periodic boundary conditions
