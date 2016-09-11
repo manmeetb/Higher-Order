@@ -27,19 +27,45 @@ from matplotlib import cm
 import math
 
 
-#give the number of elements in each coordinate direction
-CONST_DIMENSION_X = 8
-CONST_DIMENSION_Y = 8
-CONST_DIMENSION_Z = 8
+CONST_Dim = 16
 
 #This gives the order p of the solution approximation. If p =2,
 # then 3 solution points are needed in each coordinate direction
-CONST_P = 4
+CONST_P = 2
+
+CONST_NumProcessors = 1
+
+#give the number of elements in each coordinate direction
+CONST_DIMENSION_X = CONST_Dim
+CONST_DIMENSION_Y = CONST_Dim
+CONST_DIMENSION_Z = CONST_Dim
+
+
+
+CONST_Plot = False
+CONST_Deform = True
+CONST_Fixed = True
+
+meshfileName = str(CONST_DIMENSION_X) + "x" + \
+    str(CONST_DIMENSION_Y) + "x" + str(CONST_DIMENSION_Z)+ "_"
+meshSolPtsName = str(CONST_DIMENSION_X) + "x" + \
+    str(CONST_DIMENSION_Y)+ "x" + str(CONST_DIMENSION_Z)+"_P"+str(CONST_P)
+
+if (CONST_Fixed):
+    meshfileName = meshfileName + "fixed"
+    meshSolPtsName = meshSolPtsName + "fixed"
+
+if(CONST_Deform == True):
+    meshfileName = meshfileName + "Sine_" + str(CONST_NumProcessors) + ".msh"
+    meshSolPtsName = meshSolPtsName + "Sine_" + str(CONST_NumProcessors)+ "SolPts.msh"
+else:
+    meshfileName = meshfileName + "Rect_" + str(CONST_NumProcessors) + ".msh"
+    meshSolPtsName = meshSolPtsName + "Rect_" + str(CONST_NumProcessors) + "SolPts.msh"
 
 
 #The output files
-CONST_MeshFilenamePeriodic = "8x8x8_P4SinePeriodic_4.msh"
-CONST_SolPtsFile = "8x8x8_P4SinePeriodic_4_solpts.msh"
+CONST_MeshFilenamePeriodic = meshfileName
+CONST_SolPtsFile = meshSolPtsName
 
 #The box dimensions
 CONST_xMin = -8.0
@@ -161,6 +187,9 @@ class Element(object):
         # will be the same as Triangle -> Node[0]. The ordering has the be consistent
         # with the C FR code
         self.NodeArray = []
+            # Self.NodeArrayPosition is for the code to know where the node point
+            # is on the element. 0,0,0 is at min corner, and 1,1,1 is at max corner
+        self.NodeArrayPosition = []
         self.setNodeArray()
 
         # The SolPtsList will hodl the solution points in the exact order that they
@@ -268,15 +297,29 @@ class Element(object):
         elementObjectMatrix = self.gridPointMatrix
         
         self.NodeArray.append(elementObjectMatrix[0][0][CONST_P]) #1
+        self.NodeArrayPosition.append((0,0,1))
+
         self.NodeArray.append(elementObjectMatrix[CONST_P][0][CONST_P]) #2
+        self.NodeArrayPosition.append((1,0,1))
+
         self.NodeArray.append(elementObjectMatrix[0][CONST_P][CONST_P]) #3
+        self.NodeArrayPosition.append((0,1,1))
+
         self.NodeArray.append(elementObjectMatrix[CONST_P][CONST_P][CONST_P]) #4
+        self.NodeArrayPosition.append((1,1,1))
         
         
         self.NodeArray.append(elementObjectMatrix[0][0][0]) #5
+        self.NodeArrayPosition.append((0,0,0))
+
         self.NodeArray.append(elementObjectMatrix[CONST_P][0][0]) #6
+        self.NodeArrayPosition.append((1,0,0))
+
         self.NodeArray.append(elementObjectMatrix[0][CONST_P][0]) #7
+        self.NodeArrayPosition.append((0,1,0))
+
         self.NodeArray.append(elementObjectMatrix[CONST_P][CONST_P][0]) #8
+        self.NodeArrayPosition.append((1,1,0))
     
     
     
@@ -517,9 +560,13 @@ class Element(object):
 # this are the parameters n, A and Lo
 
 CONST_n = 2.
-CONST_A = 0.2
-CONST_Lo = 10.
+CONST_A = 0.5
+CONST_Lo = 8.
 def sinPertrubFunction(a,b,da,db,dc): # cNew = perturbFunction result
+    # If the grid has to be fixed for all dimensions
+    if (CONST_Fixed):
+        dc = 1.0
+    
     return CONST_A*dc*math.sin((CONST_n/CONST_Lo)*3.1415926*a)*math.sin((CONST_n/CONST_Lo)*3.1415926*b)
 
 #the method used for perturbing the grid.
@@ -537,9 +584,10 @@ def perturbGrid(PhysicalElementMatrix):
                     y = gridObject.getY()
                     z = gridObject.getZ()
                     
-                    x = x + sinPertrubFunction(y,z,CONST_dy,CONST_dz, CONST_dx)
-                    y = y + sinPertrubFunction(x,z,CONST_dx,CONST_dz,CONST_dy)
-                    z = z + sinPertrubFunction(x,y,CONST_dx,CONST_dy,CONST_dz)
+                    if (CONST_Deform):
+                        x = x + sinPertrubFunction(y,z,CONST_dy,CONST_dz, CONST_dx)
+                        y = y + sinPertrubFunction(x,z,CONST_dx,CONST_dz,CONST_dy)
+                        z = z + sinPertrubFunction(x,y,CONST_dx,CONST_dy,CONST_dz)
                     
                     gridObject.setX(x)
                     gridObject.setY(y)
@@ -682,10 +730,20 @@ def LoadMeshNodePoints(PhysicalElementMatrix, MeshNodePointsList):
 
 # search for the index of the node in a list that holds grid point objects
 def getIndexNodePointInNodePointsList(NodePoint, NodePointsList):
+   
+    Tolerance = 0.0000001
     for node in NodePointsList:
-        if ((node.getX() == NodePoint.getX()) and (node.getY()==NodePoint.getY()) and \
-            (node.getZ() == NodePoint.getZ())):
+        
+        if ((node.getX() == NodePoint.getX()) and (node.getY() == NodePoint.getY()) and (node.getZ() == NodePoint.getZ())):
             return NodePointsList.index(node)
+
+
+        if((abs(NodePoint.getX() - node.getX())<= Tolerance) and \
+           (abs(NodePoint.getY() - node.getY()) <= Tolerance) and \
+           (abs(NodePoint.getZ() - node.getZ()) <= Tolerance)):
+            if (((node.getX() == NodePoint.getX()) and \
+                 (node.getY()==NodePoint.getY()) and (node.getZ() == NodePoint.getZ())) == False):
+                return NodePointsList.index(node)
 
     return -1
 
@@ -705,9 +763,21 @@ def LoadPhysicalElementList(PhysicalElementMatrix, PhysicalElementList):
 # to create the connectivity string for each element
 def ComputeConnectivity(PhysicalElementMatrix, MeshNodePointsList):
     
+    totalNumberOfPoints = CONST_DIMENSION_X*CONST_DIMENSION_Y*CONST_DIMENSION_Z
+    print "total Num elements: ", totalNumberOfPoints
+    index2 = 1
+    
     for i in range(CONST_DIMENSION_X):
         for j in range(CONST_DIMENSION_Y):
             for k in range(CONST_DIMENSION_Z):
+                
+                print "Connectivty Percent: ", \
+                    100*float(index2)/float(totalNumberOfPoints)
+                index2 = index2 + 1
+                
+                print "     total Num elements: ", totalNumberOfPoints
+                print "     index2: ",index2
+                
                 elementObject = PhysicalElementMatrix[i][j][k]
             
                 # get the points from the Node array
@@ -1000,6 +1070,51 @@ def printSolutionPointsFile(PhysicalElementList):
     file.close()
 
 
+# This method will mathematically compute what the nodes indeces are
+# based on the way they were ordered when being placed into the 1D list
+def ComputeConnectivityMath(PhysicalElementMatrix):
+    
+    totalNumberOfPoints = CONST_DIMENSION_X*CONST_DIMENSION_Y*CONST_DIMENSION_Z
+    index2 = 1
+    for i in range(CONST_DIMENSION_X):
+        for j in range(CONST_DIMENSION_Y):
+            for k in range(CONST_DIMENSION_Z):
+                
+                print "Connectivty Percent: ", \
+                    100*float(index2)/float(totalNumberOfPoints)
+                index2 = index2 + 1
+                
+                elementObject = PhysicalElementMatrix[i][j][k]
+                
+                # get the points from the Node array
+                elementNodeArray = elementObject.getNodeArray()
+                
+                elementConnectivityString = ""
+                
+                for l in range(len(elementObject.NodeArray)):
+                    # get the node point's i,j,k values. These will
+                    # start at 1,1,1 and go on.
+                    iElem = i+1
+                    jElem = j+1
+                    kElem = k+1
+                    
+                    iNode = iElem + elementObject.NodeArrayPosition[l][0]
+                    jNode = jElem + elementObject.NodeArrayPosition[l][1]
+                    kNode = kElem + elementObject.NodeArrayPosition[l][2]
+                    
+                    # Get the index of the node point in the connectivity list
+                    indexValue = (iNode-1)*((CONST_DIMENSION_Y+1)* \
+                        (CONST_DIMENSION_Z + 1)) + (jNode - 1)* \
+                        ((CONST_DIMENSION_Z+1)) + kNode
+                                    
+                    elementConnectivityString = elementConnectivityString + \
+                                        str(indexValue)+ " "
+                elementConnectivityString = elementConnectivityString + \
+                            str(elementObject.getPartitionNumber())+ " "+ str(0)
+                elementObject.setConnectivityString(elementConnectivityString)
+
+
+
 
 def main():
     #make the matrix that will hold all the physical element data. The
@@ -1019,9 +1134,17 @@ def main():
     #print PhysicalElementMatrix
 
     # find each grid element
+    statusIndex = 1
+    totalElem = CONST_DIMENSION_X*CONST_DIMENSION_Y*CONST_DIMENSION_Z
     for i in range(CONST_DIMENSION_X):
         for j in range(CONST_DIMENSION_Y):
             for k in range(CONST_DIMENSION_Z):
+                
+                if(statusIndex%200 == 0):
+                    print "Init Grid Percent: ", \
+                        100*float(statusIndex)/float(totalElem)
+                statusIndex = statusIndex + 1
+                
                 xCenter = CONST_xMin + i*CONST_dx + (CONST_dx)/2.
                 yCenter = CONST_yMin + j*CONST_dy + (CONST_dy)/2.
                 zCenter = CONST_zMin + k*CONST_dz + (CONST_dz)/2.
@@ -1087,25 +1210,31 @@ def main():
                 if((iPlus1<=CONST_DIMENSION_X/2) and # i from 1-4, j from 5-8
                   (jPlus1>CONST_DIMENSION_Y/2)):
                     elementObject.setPartitionNumber(3)
-                
-                
-                #elementObject.setPartitionNumber(0)
+            
+                # If only one processor will be used.
+                if (CONST_NumProcessors == 1):
+                    elementObject.setPartitionNumber(0)
                 
                 PhysicalElementMatrix[i][j][k] = elementObject
 
     perturbGrid(PhysicalElementMatrix)
     
+    
     #create the list that will hold all the grid points
     MeshNodePointsList = []
     LoadMeshNodePoints(PhysicalElementMatrix, MeshNodePointsList)
+
 
     # add the element objects into a list in the same way/order in which
     # the node points are stored in the node points tuples list
     PhysicalElementList = []
     LoadPhysicalElementList(PhysicalElementMatrix, PhysicalElementList)
 
+
     # get the connectivity strings for each element
-    ComputeConnectivity(PhysicalElementMatrix, MeshNodePointsList)
+    #ComputeConnectivity(PhysicalElementMatrix, MeshNodePointsList)
+
+    ComputeConnectivityMath(PhysicalElementMatrix)
 
 
     # The boundary conditions
@@ -1115,13 +1244,12 @@ def main():
     PeriodicBCList = []
     LoadPeriodicBCData(PhysicalElementMatrix, PhysicalElementList, PeriodicBCList)
 
-
     # print everything into a file
     printMeshFilePeriodic(PhysicalElementList, MeshNodePointsList, PeriodicBCList)
     printSolutionPointsFile(PhysicalElementList)
 
-
-    plotElements(PhysicalElementMatrix)
+    if (CONST_Plot):
+        plotElements(PhysicalElementMatrix)
 
 
 main()

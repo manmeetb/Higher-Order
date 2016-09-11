@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import math
 
 #give the number of elements in each coordinate direction
-CONST_DIMENSION = 20
+CONST_DIMENSION = 8
 
 #This gives the order p of the solution approximation. If p =2,
 # then 3 solution points are needed in each coordinate direction
@@ -31,12 +31,14 @@ CONST_yMax = 8.0
 CONST_dx = (CONST_xMax-CONST_xMin)/(CONST_DIMENSION)
 CONST_dy = (CONST_yMax - CONST_yMin)/(CONST_DIMENSION)
 
-CONST_Deform = False
+CONST_Deform = True
 
 #CONST_MESHFILENAME = "8x8_P2Riemann_4.msh"
 
-meshfileName = str(CONST_DIMENSION) + "x" + str(CONST_DIMENSION) + "_"
-meshSolPtsName = str(CONST_DIMENSION) + "x" + str(CONST_DIMENSION)+"_P"+str(CONST_P) 
+meshfileName = str(CONST_DIMENSION) + "x" + \
+    str(CONST_DIMENSION) + "_"
+meshSolPtsName = str(CONST_DIMENSION) + "x" + \
+    str(CONST_DIMENSION)+"_P"+str(CONST_P)
 
 if(CONST_Deform == True):
      meshfileName = meshfileName + "Sine_" + str(CONST_NumProcessors) + ".msh"
@@ -135,6 +137,7 @@ class element(object):
                 GridPointObject = GridPoint(x,y)
                 self.gridPointList.append(GridPointObject)
                 self.gridPointMatrix[CONST_P-j][i] = GridPointObject
+                
 
                 """
                 print "     i: " + str(CONST_P-j)
@@ -166,6 +169,19 @@ class element(object):
         
         x = xMinPhysical + (deltaxPhysical)*(xFactor)
         y = yMinPhysical + (deltayPhysical)*(yFactor)
+        
+        """
+        if((abs(x - 2.22044e-16) <0.000001) or (abs(y - 2.22044e-16) <0.000001)):
+            print " - Map Parent"
+            print "     - x: ", x
+            print "     - y: ", y
+            print "     xi: ", xi
+            print "     eta: ", eta
+            print " xMaxPhysical: ", xMaxPhysical
+            print " xMinPhysical: ", xMinPhysical
+            print " yMaxPhysical: ", yMaxPhysical
+            print " yMinPhysical: ", yMinPhysical
+        """
         
         return (x,y)
 
@@ -631,7 +647,6 @@ def printSolutionPoints(PhysicalElementMatrix):
         for r in range(CONST_DIMENSION-1, -1, -1):
             elementObject = PhysicalElementMatrix[r][c]
             elementGridPointMatrix = elementObject.getGridPointsMatrix()
-            
             #first, print the 4 vertices for the element: (from bot right, ccw)
             file.write(str(elementGridPointMatrix[CONST_P][CONST_P].getX()) + " " + \
                        str(elementGridPointMatrix[CONST_P][CONST_P].getY()) + "\n")
